@@ -1,26 +1,27 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-const Osa = (props) => <p>{props.osa} {props.tehtavia}</p>
+const reducer = (accumulator, currentValue) => accumulator + currentValue;
 
 const Otsikko = (props) => <h1>{props.kurssi.nimi}</h1>
 
-const Sisalto = (props) => {
-    const [osa1, osa2, osa3] = props.kurssi.osat
-    return (
-        <div>
-            <Osa osa={osa1.nimi} tehtavia={osa1.tehtavia} />
-        </div>
-    )
-}
+const Sisalto = (props) => props.kurssi.osat.map((osat, i) =>
+
+    <div key={osat.id}>
+
+        <p>{osat.nimi} {osat.tehtavia}</p>
+
+    </div>)
 
 const Yhteensa = (props) => {
-    const [osa1, osa2, osa3] = props.kurssi.osat
+
+    const yhteensa = props.kurssi.osat.map(osat => osat.tehtavia)
 
     return (
-        <p>yhteensä {osa1.tehtavia + osa2.tehtavia + osa3.tehtavia} tehtävää</p>
+        <p>yhteensä {yhteensa.reduce(reducer)} tehtävää</p>
     )
 }
+
 
 const Kurssi = ({ kurssi }) => {
     return (
@@ -32,12 +33,6 @@ const Kurssi = ({ kurssi }) => {
 }
 
 const App = () => {
-
-    const rivit = () => kurssi.osat.map(osat =>
-        <li key={osat.id}>
-            {osat.nimi} {osat.tehtavia}
-        </li>
-    )
 
     const kurssi = {
         nimi: 'Half Stack -sovelluskehitys',
@@ -56,17 +51,17 @@ const App = () => {
                 nimi: 'Komponenttien tila',
                 tehtavia: 14,
                 id: 3
+            },
+            {
+                nimi: 'Redux',
+                tehtavia: 7,
+                id: 4
             }
         ]
     }
 
     return (
         <div>
-            
-
-            <ul >
-                {rivit()}
-            </ul>
             <Kurssi kurssi={kurssi} />
         </div>
     )
