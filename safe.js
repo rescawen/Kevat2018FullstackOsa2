@@ -5,11 +5,13 @@ const reducer = (accumulator, currentValue) => accumulator + currentValue;
 
 const Otsikko = (props) => <h1>{props.kurssi.nimi}</h1>
 
+const Osa = (props) => <p>{props.osa.nimi} {props.osa.tehtavia}</p>
+
 const Sisalto = (props) => props.kurssi.osat.map((osat, i) =>
 
     <div key={osat.id}>
 
-        <p>{osat.nimi} {osat.tehtavia}</p>
+        <Osa osa={osat} />
 
     </div>)
 
@@ -23,46 +25,67 @@ const Yhteensa = (props) => {
 }
 
 
-const Kurssi = ({ kurssi }) => {
+const Kurssi = (props) => {
     return (
         <div>
-            <Otsikko kurssi={kurssi} />
-            <Sisalto kurssi={kurssi} />
-            <Yhteensa kurssi={kurssi} />
+            <Otsikko kurssi={props.kurssi} />
+            <Sisalto kurssi={props.kurssi} />
+            <Yhteensa kurssi={props.kurssi} />
         </div>)
 }
 
-const App = () => {
+const Kurssit = (props) => props.kurssit.map((kurssit, i) =>
 
-    const kurssi = {
-        nimi: 'Half Stack -sovelluskehitys',
-        osat: [
-            {
-                nimi: 'Reactin perusteet',
-                tehtavia: 10,
-                id: 1
-            },
-            {
-                nimi: 'Tiedonvälitys propseilla',
-                tehtavia: 7,
-                id: 2
-            },
-            {
-                nimi: 'Komponenttien tila',
-                tehtavia: 14,
-                id: 3
-            },
-            {
-                nimi: 'Redux',
-                tehtavia: 7,
-                id: 4
-            }
-        ]
-    }
+    <div key={kurssit.id}>
+
+        <Kurssi kurssi={kurssit} />
+
+    </div>)
+
+const App = () => {
+    const kurssit = [
+        {
+            nimi: 'Half Stack -sovelluskehitys',
+            id: 1,
+            osat: [
+                {
+                    nimi: 'Reactin perusteet',
+                    tehtavia: 10,
+                    id: 1
+                },
+                {
+                    nimi: 'Tiedonvälitys propseilla',
+                    tehtavia: 7,
+                    id: 2
+                },
+                {
+                    nimi: 'Komponenttien tila',
+                    tehtavia: 14,
+                    id: 3
+                }
+            ]
+        },
+        {
+            nimi: 'Node.js',
+            id: 2,
+            osat: [
+                {
+                    nimi: 'Routing',
+                    tehtavia: 3,
+                    id: 1
+                },
+                {
+                    nimi: 'Middlewaret',
+                    tehtavia: 7,
+                    id: 2
+                }
+            ]
+        },
+    ]
 
     return (
         <div>
-            <Kurssi kurssi={kurssi} />
+            <Kurssit kurssit={kurssit} />
         </div>
     )
 }

@@ -1,21 +1,60 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import Kurssi from './components/Kurssi'
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+const Kurssit = (props) => props.kurssit.map((kurssit, i) =>
+
+    <div key={kurssit.id}>
+
+        <Kurssi kurssi={kurssit} />
+
+    </div>)
+
+const App = () => {
+  const kurssit = [
+      {
+          nimi: 'Half Stack -sovelluskehitys',
+          id: 1,
+          osat: [
+              {
+                  nimi: 'Reactin perusteet',
+                  tehtavia: 10,
+                  id: 1
+              },
+              {
+                  nimi: 'Tiedonvälitys propseilla',
+                  tehtavia: 7,
+                  id: 2
+              },
+              {
+                  nimi: 'Komponenttien tila',
+                  tehtavia: 14,
+                  id: 3
+              }
+          ]
+      },
+      {
+          nimi: 'Node.js',
+          id: 2,
+          osat: [
+              {
+                  nimi: 'Routing',
+                  tehtavia: 3,
+                  id: 1
+              },
+              {
+                  nimi: 'Middlewaret',
+                  tehtavia: 7,
+                  id: 2
+              }
+          ]
+      },
+  ]
+
+  return (
+      <div>
+          <Kurssit kurssit={kurssit} />
       </div>
-    );
-  }
+  )
 }
 
-export default App;
+export default App
