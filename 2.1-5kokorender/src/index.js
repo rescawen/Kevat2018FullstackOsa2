@@ -5,11 +5,13 @@ const reducer = (accumulator, currentValue) => accumulator + currentValue;
 
 const Otsikko = (props) => <h1>{props.kurssi.nimi}</h1>
 
+const Osa = (props) => <p>{props.osa.nimi} {props.osa.tehtavia}</p>
+
 const Sisalto = (props) => props.kurssi.osat.map((osat, i) =>
 
     <div key={osat.id}>
 
-        <p>{osat.nimi} {osat.tehtavia}</p>
+        <Osa osa={osat} />
 
     </div>)
 
@@ -23,12 +25,12 @@ const Yhteensa = (props) => {
 }
 
 
-const Kurssi = ({ kurssi }) => {
+const Kurssi = (props) => {
     return (
         <div>
-            <Otsikko kurssi={kurssi} />
-            <Sisalto kurssi={kurssi} />
-            <Yhteensa kurssi={kurssi} />
+            <Otsikko kurssi={props.kurssi} />
+            <Sisalto kurssi={props.kurssi} />
+            <Yhteensa kurssi={props.kurssi} />
         </div>)
 }
 
@@ -83,9 +85,7 @@ const App = () => {
 
     return (
         <div>
-
             <Kurssit kurssit={kurssit} />
-
         </div>
     )
 }
