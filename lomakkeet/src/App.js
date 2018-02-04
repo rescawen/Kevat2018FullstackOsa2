@@ -7,6 +7,7 @@ class App extends React.Component {
       persons: props.persons,
       newName: 'Uusi nimi',
       newNumber: 'Uusi numero',
+      filter: ''
 
     }
   }
@@ -18,11 +19,11 @@ class App extends React.Component {
     this.state.persons.forEach(function (item) {
       if (a === item.name) {
         toggle = 1;
-        alert("same value")
+        alert("Tämä nimi on jo käytetty")
       }
     });
 
-    if (toggle == 1) {
+    if (toggle === 1) {
       return
     }
 
@@ -50,6 +51,11 @@ class App extends React.Component {
     this.setState({ newNumber: event.target.value })
 
   }
+  handleFilterChange = (event) => {
+    console.log(event.target.value)
+    this.setState({ filter: event.target.value })
+
+  }
 
   render() {
 
@@ -59,6 +65,12 @@ class App extends React.Component {
     return (
       <div>
         <h2>Puhelinluettelo</h2>
+        <div>rajaa näytettäviä
+          <input
+            value={this.state.filter}
+            onChange={this.handleFilterChange}
+          />
+        </div>
         <h3>Lisää uusia</h3>
         <form onSubmit={this.addPerson}>
           <div>nimi:

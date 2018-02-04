@@ -50,13 +50,11 @@ class App extends React.Component {
     return (
       <div>
         <h1>Muistiinpanot</h1>
-
         <div>
           <button onClick={this.toggleVisible}>
             näytä {label}
           </button>
         </div>
-
         <ul>
           {notesToShow.map(note => <Note key={note.id} note={note} />)}
         </ul>
