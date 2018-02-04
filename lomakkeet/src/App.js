@@ -6,28 +6,49 @@ class App extends React.Component {
     this.state = {
       persons: props.persons,
       newName: 'Uusi nimi',
+      newNumber: 'Uusi numero',
 
     }
   }
 
   addPerson = (event) => {
     event.preventDefault()
-    
+    var toggle = 0;
+    const a = this.state.newName
+    this.state.persons.forEach(function (item) {
+      if (a === item.name) {
+        toggle = 1;
+        alert("same value")
+      }
+    });
+
+    if (toggle == 1) {
+      return
+    }
+
     const personObject = {
       name: this.state.newName,
+      number: this.state.newNumber,
     }
 
     const persons = this.state.persons.concat(personObject)
 
     this.setState({
       persons,
-      newName: 'Uusi nimi'
+      newName: 'Uusi nimi',
+      newNumber: 'Uusi numero'
     })
   }
 
   handlePersonChange = (event) => {
     console.log(event.target.value)
     this.setState({ newName: event.target.value })
+
+  }
+  handleNumberChange = (event) => {
+    console.log(event.target.value)
+    this.setState({ newNumber: event.target.value })
+
   }
 
   render() {
@@ -38,21 +59,27 @@ class App extends React.Component {
     return (
       <div>
         <h2>Puhelinluettelo</h2>
+        <h3>Lisää uusia</h3>
         <form onSubmit={this.addPerson}>
           <div>nimi:
           <input
-            value={this.state.newName}
-            onChange={this.handlePersonChange}
-          />
+              value={this.state.newName}
+              onChange={this.handlePersonChange}
+            />
+          </div>
+          <div>numero:
+          <input
+              value={this.state.newNumber}
+              onChange={this.handleNumberChange}
+            />
           </div>
           <div>
-          <button type="submit">lisää</button>
+            <button type="submit">lisää</button>
           </div>
         </form>
-        <h2>Numerot</h2>
-
+        <h3>Numerot</h3>
         <div>
-          {personsToShow.map(person => <p key={person.name}>{person.name}</p>)}
+          {personsToShow.map(person => <p key={person.name}>{person.name} {person.number}</p>)}
         </div>
 
       </div>
