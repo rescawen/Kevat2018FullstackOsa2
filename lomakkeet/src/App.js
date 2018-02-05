@@ -1,7 +1,11 @@
 import React from 'react';
-import Persons from './components/Persons'
+import Person from './components/Person'
+import Filter from './components/Filter'
+import Form from './components/Form'
 
 class App extends React.Component {
+
+
   constructor(props) {
     super(props)
     this.state = {
@@ -72,34 +76,14 @@ class App extends React.Component {
     return (
       <div>
         <h2>Puhelinluettelo</h2>
-        <div>rajaa näytettäviä
-          <input
-            onChange={this.handleFilterChange}
-          />
-        </div>
+        <Filter handleFilterChange={this.handleFilterChange} />
         <h3>Lisää uusia</h3>
-        <form onSubmit={this.addPerson}>
-          <div>nimi:
-          <input
-              value={this.state.newName}
-              onChange={this.handlePersonChange}
-            />
-          </div>
-          <div>numero:
-          <input
-              value={this.state.newNumber}
-              onChange={this.handleNumberChange}
-            />
-          </div>
-          <div>
-            <button type="submit">lisää</button>
-          </div>
-        </form>
+        <Form newName={this.state.newName} newNumber={this.state.newNumber} addPerson={this.addPerson}
+          handlePersonChange={this.handlePersonChange} handleNumberChange={this.handleNumberChange} />
         <h3>Numerot</h3>
         <div>
-          {this.state.personsToShow.map(person => <p key={person.name}>{person.name} {person.number}</p>)}
+          {this.state.personsToShow.map(person => <Person key={person.name} person={person} />)}
         </div>
-
       </div>
     )
   }
