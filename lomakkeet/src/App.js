@@ -2,14 +2,15 @@ import React from 'react';
 import Person from './components/Person'
 import Filter from './components/Filter'
 import Form from './components/Form'
+import axios from 'axios'
 
 class App extends React.Component {
   
-  constructor(props) {
-    super(props)
+  constructor() {
+    super()
     this.state = {
-      persons: props.persons,
-      personsToShow: props.persons,
+      persons: [],
+      personsToShow: [],
       newName: 'Uusi nimi',
       newNumber: 'Uusi numero',
       filter: ''
@@ -35,6 +36,7 @@ class App extends React.Component {
     const personObject = {
       name: this.state.newName,
       number: this.state.newNumber,
+      id: this.state.persons.length + 1
     }
 
     const persons = this.state.persons.concat(personObject)
@@ -45,6 +47,17 @@ class App extends React.Component {
       newNumber: 'Uusi numero',
       personsToShow: persons
     })
+  }
+
+  componentWillMount() {
+    console.log('will mount')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled')
+        this.setState({ persons: response.data })
+        this.setState({ personsToShow: response.data })
+      })
   }
 
   handlePersonChange = (event) => {
@@ -81,7 +94,7 @@ class App extends React.Component {
           handlePersonChange={this.handlePersonChange} handleNumberChange={this.handleNumberChange} />
         <h3>Numerot</h3>
         <div>
-          {this.state.personsToShow.map(person => <Person key={person.name} person={person} />)}
+          {this.state.personsToShow.map(person => <Person key={person.id} person={person} />)}
         </div>
       </div>
     )
