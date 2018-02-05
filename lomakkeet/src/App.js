@@ -4,8 +4,7 @@ import Filter from './components/Filter'
 import Form from './components/Form'
 
 class App extends React.Component {
-
-
+  
   constructor(props) {
     super(props)
     this.state = {

@@ -1,96 +1,84 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import axios from 'axios'
 
-const reducer = (accumulator, currentValue) => accumulator + currentValue;
+class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      notes: [],
+      newNote: '',
+      showAll: true
+    }
+    console.log('constructor')
+  }
 
-const Otsikko = (props) => <h1>{props.kurssi.nimi}</h1>
+  componentDidMount() {
+    console.log('will mount')
+    axios
+      .get('http://localhost:3001/notes')
+      .then(response => {
+        console.log('promise fulfilled')
+        this.setState({ notes: response.data })
+      })
+  }
 
-const Osa = (props) => <p>{props.osa.nimi} {props.osa.tehtavia}</p>
+  addNote = (event) => {
+    event.preventDefault()
+    const noteObject = {
+      content: this.state.newNote,
+      date: new Date().new,
+      important: Math.random() > 0.5,
+      id: this.state.notes.length + 1
+    }
 
-const Sisalto = (props) => props.kurssi.osat.map((osat, i) =>
+    const notes = this.state.notes.concat(noteObject)
 
-    <div key={osat.id}>
+    this.setState({
+      notes,
+      newNote: ''
+    })
+  }
+  
+  handleNoteChange = (event) => {
+    console.log(event.target.value)
+    this.setState({ newNote: event.target.value })
+  }
 
-        <Osa osa={osat} />
+  toggleVisible = () => {
+    this.setState({showAll: !this.state.showAll})
+  }
 
-    </div>)
+  render() {
+    console.log('render')
+    const notesToShow =
+      this.state.showAll ?
+        this.state.notes :
+        this.state.notes.filter(note => note.important === true)
 
-const Yhteensa = (props) => {
-
-    const yhteensa = props.kurssi.osat.map(osat => osat.tehtavia)
+    const label = this.state.showAll ? 'vain tärkeät' : 'kaikki'
 
     return (
-        <p>yhteensä {yhteensa.reduce(reducer)} tehtävää</p>
-    )
-}
-
-
-const Kurssi = (props) => {
-    return (
+      <div>
+        <h1>Muistiinpanot</h1>
         <div>
-            <Otsikko kurssi={props.kurssi} />
-            <Sisalto kurssi={props.kurssi} />
-            <Yhteensa kurssi={props.kurssi} />
-        </div>)
-}
-
-const Kurssit = (props) => props.kurssit.map((kurssit, i) =>
-
-    <div key={kurssit.id}>
-
-        <Kurssi kurssi={kurssit} />
-
-    </div>)
-
-const App = () => {
-    const kurssit = [
-        {
-            nimi: 'Half Stack -sovelluskehitys',
-            id: 1,
-            osat: [
-                {
-                    nimi: 'Reactin perusteet',
-                    tehtavia: 10,
-                    id: 1
-                },
-                {
-                    nimi: 'Tiedonvälitys propseilla',
-                    tehtavia: 7,
-                    id: 2
-                },
-                {
-                    nimi: 'Komponenttien tila',
-                    tehtavia: 14,
-                    id: 3
-                }
-            ]
-        },
-        {
-            nimi: 'Node.js',
-            id: 2,
-            osat: [
-                {
-                    nimi: 'Routing',
-                    tehtavia: 3,
-                    id: 1
-                },
-                {
-                    nimi: 'Middlewaret',
-                    tehtavia: 7,
-                    id: 2
-                }
-            ]
-        },
-    ]
-
-    return (
-        <div>
-            <Kurssit kurssit={kurssit} />
+          <button onClick={this.toggleVisible}>
+            näytä {label}
+          </button>
         </div>
+        <ul>
+          {notesToShow.map(note => <li key={note.id}>{note.content}</li>)}
+        </ul>
+        <form onSubmit={this.addNote}>
+          <input
+            value={this.state.newNote}
+            onChange={this.handleNoteChange}
+          />
+          <button type="submit">tallenna</button>
+        </form>
+      </div>
     )
+  }
 }
 
-ReactDOM.render(
-    <App />,
-    document.getElementById('root')
-)
+
+export default App
