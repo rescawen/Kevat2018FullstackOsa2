@@ -1,15 +1,17 @@
 import React from 'react';
+import Persons from './components/Persons'
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       persons: props.persons,
+      personsToShow: props.persons,
       newName: 'Uusi nimi',
       newNumber: 'Uusi numero',
       filter: ''
-
     }
+
   }
 
   addPerson = (event) => {
@@ -37,7 +39,8 @@ class App extends React.Component {
     this.setState({
       persons,
       newName: 'Uusi nimi',
-      newNumber: 'Uusi numero'
+      newNumber: 'Uusi numero',
+      personsToShow: persons
     })
   }
 
@@ -51,23 +54,26 @@ class App extends React.Component {
     this.setState({ newNumber: event.target.value })
 
   }
+
+
   handleFilterChange = (event) => {
     console.log(event.target.value)
-    this.setState({ filter: event.target.value })
+    var updatedList = this.state.persons;
+    updatedList = updatedList.filter(function (person) {
+      return person.name.toLowerCase().search(
+        event.target.value.toLowerCase()) !== -1;
+    });
+    this.setState({ personsToShow: updatedList })
 
   }
 
   render() {
-
-    const personsToShow =
-      this.state.persons
 
     return (
       <div>
         <h2>Puhelinluettelo</h2>
         <div>rajaa näytettäviä
           <input
-            value={this.state.filter}
             onChange={this.handleFilterChange}
           />
         </div>
@@ -91,7 +97,7 @@ class App extends React.Component {
         </form>
         <h3>Numerot</h3>
         <div>
-          {personsToShow.map(person => <p key={person.name}>{person.name} {person.number}</p>)}
+          {this.state.personsToShow.map(person => <p key={person.name}>{person.name} {person.number}</p>)}
         </div>
 
       </div>

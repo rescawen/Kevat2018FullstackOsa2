@@ -27,9 +27,7 @@ class App extends React.Component {
       newNote: ''
     })
   }
-
-
-
+  
   handleNoteChange = (event) => {
     console.log(event.target.value)
     this.setState({ newNote: event.target.value })
