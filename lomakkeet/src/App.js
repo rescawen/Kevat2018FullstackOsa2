@@ -2,7 +2,7 @@ import React from 'react';
 import Person from './components/Person'
 import Filter from './components/Filter'
 import Form from './components/Form'
-import axios from 'axios'
+import personService from './services/personService'
 
 class App extends React.Component {
   
@@ -10,7 +10,7 @@ class App extends React.Component {
     super()
     this.state = {
       persons: [],
-      personsToShow: [],
+      //personsToShow: [], // dynaaminen personstoshow on filterointi 2.9 tehtavan olio
       newName: 'Uusi nimi',
       newNumber: 'Uusi numero',
       filter: ''
@@ -26,6 +26,7 @@ class App extends React.Component {
       if (a === item.name) {
         toggle = 1;
         alert("Tämä nimi on jo käytetty")
+        
       }
     });
 
@@ -39,22 +40,33 @@ class App extends React.Component {
       id: this.state.persons.length + 1
     }
 
-    const persons = this.state.persons.concat(personObject)
+    //const persons = []
 
-    this.setState({
-      persons,
-      newName: 'Uusi nimi',
-      newNumber: 'Uusi numero',
-      personsToShow: persons
+    personService
+    .create(personObject)
+    .then(newName => {
+      this.setState({
+        persons: this.state.persons.concat(newName),
+        newName: 'Uusi nimi',
+        newNumber: 'Uusi numero',
+        //personsToShow: persons
+      })
     })
+
+    // const persons = this.state.persons.concat(personObject)
+
+    // this.setState({
+    //   persons,
+    //   newName: 'Uusi nimi',
+    //   newNumber: 'Uusi numero',
+    //   personsToShow: persons
+    // })
   }
 
   componentWillMount() {
-    console.log('will mount')
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then(response => {
-        console.log('promise fulfilled')
         this.setState({ persons: response.data })
         this.setState({ personsToShow: response.data })
       })
@@ -85,16 +97,18 @@ class App extends React.Component {
 
   render() {
 
+    const personsToShow = this.state.persons
+
     return (
       <div>
         <h2>Puhelinluettelo</h2>
-        <Filter handleFilterChange={this.handleFilterChange} />
+        {/* <Filter handleFilterChange={this.handleFilterChange} /> filterointi pois UI, kun ei toimi*/}
         <h3>Lisää uusia</h3>
         <Form newName={this.state.newName} newNumber={this.state.newNumber} addPerson={this.addPerson}
           handlePersonChange={this.handlePersonChange} handleNumberChange={this.handleNumberChange} />
         <h3>Numerot</h3>
         <div>
-          {this.state.personsToShow.map(person => <Person key={person.id} person={person} />)}
+          {personsToShow.map(person => <Person key={person.id} person={person} />)}
         </div>
       </div>
     )
